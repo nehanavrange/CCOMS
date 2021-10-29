@@ -40,12 +40,12 @@ public class EmployeeRestController {
 
     @ApiOperation(value = "Get an employee by Id")
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmpById(@PathVariable("id") Long id) {
-        try {
+    public ResponseEntity<Employee> getEmpById(@PathVariable("id") Long id) throws ResourceNotFoundException {
+       // try {
             return ResponseEntity.ok().body(empsvc.getEmpById(id));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        //} catch (ResourceNotFoundException e) {
+          //  return ResponseEntity.notFound().build();
+        //}
     }
 
     @ApiOperation(value = "Add an employee")

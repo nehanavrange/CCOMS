@@ -144,7 +144,7 @@ public class EmpRestStepDefs extends AbstractEmpRestCntr implements En {
     }
 
     @Then("I should get {int} response code of HTTP GET request")
-    public void get_http_response_code_of_http_get_request(Integer http_code){
+    public void get_http_response_code_of_http_get_request(Integer http_code) throws ResourceNotFoundException{
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
         ResponseEntity<Employee> responseEntity = empRestController.getEmpById(this.empid);
