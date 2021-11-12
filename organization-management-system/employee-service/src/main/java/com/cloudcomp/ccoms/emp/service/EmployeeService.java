@@ -38,7 +38,7 @@ public class EmployeeService {
     }
 
     public void updateEmp(Employee emp){
-        empRepo.save(this.emp);
+        empRepo.save(emp);
     }
 
     public void deleteEmp(Long id) throws ResourceNotFoundException {

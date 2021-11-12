@@ -33,4 +33,12 @@ public class MyControllerAdvice extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		return new ResponseEntity<>("Http method type is mismatched,Please provide valid method type.",HttpStatus.NOT_FOUND);
 		}
+	
+	@ExceptionHandler(NullPointerException.class)
+	public ResponseEntity<Object> handleNullPointerException(NullPointerException np){
+		return new ResponseEntity<>("Value is null, Please provide some value",HttpStatus.BAD_REQUEST);
+		
+	}
+
+
 }

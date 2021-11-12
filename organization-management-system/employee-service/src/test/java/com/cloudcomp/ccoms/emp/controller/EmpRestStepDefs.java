@@ -212,7 +212,7 @@ public class EmpRestStepDefs extends AbstractEmpRestCntr implements En {
     }
 
     @Then("I should get valid HTTP response code 200 of DELETE request to delete Employee")
-    public void i_should_get_valid_HTTP_response_code_of_DELETE_request_to_delete_Employee() {
+    public void i_should_get_valid_HTTP_response_code_of_DELETE_request_to_delete_Employee() throws ResourceNotFoundException {
         // Write code here that turns the phrase above into concrete actions
         empRestController.deleteEmp(1L);
         ResponseEntity<Object> negResponseEntity = empRestController.deleteEmp(5L);

@@ -27,100 +27,113 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "Employee Management System")
 public class EmployeeRestController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeRestController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeRestController.class);
 
-    @Autowired
-    EmployeeService empsvc;
+	@Autowired
+	EmployeeService empsvc;
 
-    @GetMapping("/")
-    public String get() {
-        return "Please give url as hostname/employee/get";
+	@GetMapping("/")
+	public String get() {
+		return "Please give url as hostname/employee/get";
 
-    }
+	}
 
-    @ApiOperation(value = "Get an employee by Id")
-    @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmpById(@PathVariable("id") Long id) throws ResourceNotFoundException {
-       // try {
-            return ResponseEntity.ok().body(empsvc.getEmpById(id));
-        //} catch (ResourceNotFoundException e) {
-          //  return ResponseEntity.notFound().build();
-        //}
-    }
+	@ApiOperation(value = "Get an employee by Id")
+	@GetMapping("/{id}")
+	public ResponseEntity<Employee> getEmpById(@PathVariable("id") Long id) throws ResourceNotFoundException 
+	{
+		try {
+			return ResponseEntity.ok().body(empsvc.getEmpById(id));
 
-    @ApiOperation(value = "Add an employee")
-    @PostMapping("/addemp")
-    public ResponseEntity<Object> addEmp(@RequestBody Employee emp) {
-        empsvc.addEmp(emp);
-        // Create resource location
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/api/{id}").buildAndExpand(emp.getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
-    }
+		} catch (ResourceNotFoundException e)
+		{
+			throw new ResourceNotFoundException("Id not found");
+		}
+		
+	}
 
-    @ApiOperation(value = "Add an employees at once")
-    @PostMapping("/addemps")
-    public ResponseEntity<Object> addEmps(@RequestBody List<Employee> emps) {
+	@ApiOperation(value = "Add an employee")
+	@PostMapping("/addemp")
+	public ResponseEntity<Object> addEmp(@RequestBody Employee emp) {
+		empsvc.addEmp(emp);
+		// Create resource location
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/api/{id}").buildAndExpand(emp.getId())
+				.toUri();
+		return ResponseEntity.created(location).build();
+	}
 
-        empsvc.addEmps(emps);
-        // Create resource location
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/api/all").buildAndExpand().toUri();
-        return ResponseEntity.created(location).build();
-    }
+	@ApiOperation(value = "Add an employees at once")
+	@PostMapping("/addemps")
+	public ResponseEntity<Object> addEmps(@RequestBody List<Employee> emps) {
 
-    @ApiOperation(value = "View a list of available employees", response = List.class)
-    @GetMapping("/get")
-    public List<Employee> getAllEmps() {
-        return empsvc.getAllEmps();
-    }
+		empsvc.addEmps(emps);
+		// Create resource location
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/api/all").buildAndExpand().toUri();
+		return ResponseEntity.created(location).build();
+	}
 
-    @ApiOperation(value = "Update an employee")
-    @PutMapping("/update")
-    public ResponseEntity<Object> updateEmp(@RequestBody Employee emp) {
-        try {
-            empsvc.getEmpById(emp.getId());
-            empsvc.updateEmp(emp);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+	@ApiOperation(value = "View a list of available employees", response = List.class)
+	@GetMapping("/get")
+	public List<Employee> getAllEmps() {
+		return empsvc.getAllEmps();
+	}
 
-        // can use 205 http reset
-        return ResponseEntity.status(HttpStatus.OK).build();
+	@ApiOperation(value = "Update an employee")
+	@PutMapping("/update")
+	public ResponseEntity<Object> updateEmp(@RequestBody Employee emp) throws ResourceNotFoundException {
+		try {
+			empsvc.getEmpById(emp.getId());
+			empsvc.updateEmp(emp);
+			
+			return ResponseEntity.status(HttpStatus.OK).build();
 
-    }
+		} catch (ResourceNotFoundException e) {
+			//return ResponseEntity.notFound().build();
+			throw new ResourceNotFoundException("Id not found");
+			
+		}
 
-    @ApiOperation(value = "Delete a employee by employee id")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteEmp(@PathVariable("id") Long id) {
-        try {
-            empsvc.deleteEmp(id);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
+		// can use 205 http reset
+		//return ResponseEntity.status(HttpStatus.OK).build();
 
-    @ApiOperation(value = "Update a empoyee partially by employee id")
-    @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateEmpPartially(@PathVariable("id") Long id, @RequestBody Employee emp) {
-        try {
-            empsvc.updateEmpPartially(id);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
+	}
 
-    @ApiOperation(value = "List employee by department id")
-    @GetMapping("/dept/{deptId}")
-    public List<Employee> findByDept(@PathVariable("deptId") int deptId) {
-        return empsvc.findByDept(deptId);
-    }
+	@ApiOperation(value = "Delete a employee by employee id")
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> deleteEmp(@PathVariable("id") Long id) throws ResourceNotFoundException {
+		try {
+			empsvc.deleteEmp(id);
+		} catch (ResourceNotFoundException e) {
+			//return ResponseEntity.notFound().build();
+			
+			throw new ResourceNotFoundException("Id not found");
+		}
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
 
-    @ApiOperation(value = "List employee by organization id")
-    @GetMapping("/org/{orgId}")
-    public List<Employee> findByOrg(@PathVariable("orgId") int orgId) {
-        LOGGER.info("Employee find: organizationId={}", orgId);
-        return empsvc.findByOrg(orgId);
-    }
+	@ApiOperation(value = "Update a empoyee partially by employee id")
+	@PatchMapping("/{id}")
+	public ResponseEntity<Object> updateEmpPartially(@PathVariable("id") Long id, @RequestBody Employee emp) throws ResourceNotFoundException {
+		try {
+			empsvc.updateEmpPartially(id);
+			return ResponseEntity.status(HttpStatus.OK).build();
+		} catch (ResourceNotFoundException e) {
+			//return ResponseEntity.notFound().build();
+			throw new ResourceNotFoundException("Id not found");
+		}
+		
+	}
+
+	@ApiOperation(value = "List employee by department id")
+	@GetMapping("/dept/{deptId}")
+	public List<Employee> findByDept(@PathVariable("deptId") int deptId) {
+		return empsvc.findByDept(deptId);
+	}
+
+	@ApiOperation(value = "List employee by organization id")
+	@GetMapping("/org/{orgId}")
+	public List<Employee> findByOrg(@PathVariable("orgId") int orgId) {
+		LOGGER.info("Employee find: organizationId={}", orgId);
+		return empsvc.findByOrg(orgId);
+	}
 }

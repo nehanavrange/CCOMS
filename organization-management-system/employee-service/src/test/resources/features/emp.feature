@@ -13,8 +13,8 @@ When I set HTTP GET request RESTful API with URI <emp_id>
 Then I should get <result> response code of HTTP GET request
 Examples:
 |emp_id |result  | 
-|1      |200     |
 |4      |404     |     
+|1      |200     |
 
 Scenario: Get Employee information using Dept-id
 When I set HTTP GET request RESTful API with dept with 11 id URI
