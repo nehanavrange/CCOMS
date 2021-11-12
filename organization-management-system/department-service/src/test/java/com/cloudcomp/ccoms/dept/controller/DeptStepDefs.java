@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.cloudcomp.ccoms.dept.advice.ResourceNotFoundException;
 import com.cloudcomp.ccoms.dept.client.EmployeeClient;
 import com.cloudcomp.ccoms.dept.dao.DepartmentRepository;
 import com.cloudcomp.ccoms.dept.model.Department;
@@ -113,7 +114,7 @@ public class DeptStepDefs extends AbstractDeptRestCntr {
     }
 
     @Then("I should get {int} response code of HTTP GET request for depatrtment")
-    public void i_should_get_response_code_of_HTTP_GET_request_for_depatrtment(Integer int1) {
+    public void i_should_get_response_code_of_HTTP_GET_request_for_depatrtment(Integer int1) throws ResourceNotFoundException {
         Department dept = deptRestController.getDeptById(11L);
         Department neg_dept = deptRestController.getDeptById(13L);
         Assertions.assertEquals("ORMB", dept.getName());

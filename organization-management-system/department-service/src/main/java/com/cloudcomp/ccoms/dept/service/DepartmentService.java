@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cloudcomp.ccoms.dept.advice.ResourceNotFoundException;
 import com.cloudcomp.ccoms.dept.client.EmployeeClient;
 import com.cloudcomp.ccoms.dept.dao.DepartmentRepository;
 import com.cloudcomp.ccoms.dept.model.Department;
@@ -39,18 +40,20 @@ public class DepartmentService {
         deptrepo.deleteAll();
     }
 
-    public Department getDeptById(Long deptId) {
+    public Department getDeptById(Long deptId)  throws ResourceNotFoundException {
 
         Optional<Department> depts = deptrepo.findById(deptId);
         if (depts.isPresent()) {
             return depts.get();
         } else {
-            return null;
+           // return null;
+        	throw new ResourceNotFoundException("Id not found");
         }
     }
 
-    public List<Department> getDeptsByOrgId(Long orgId) {
-        return deptrepo.findDeptByOrgId(orgId);
+    public List<Department> getDeptsByOrgId(Long orgId)  {
+       
+    	return deptrepo.findDeptByOrgId(orgId);
     }
 
     public List<Department> getDeptswithEmpsUsingOrgid(Long orgId) {

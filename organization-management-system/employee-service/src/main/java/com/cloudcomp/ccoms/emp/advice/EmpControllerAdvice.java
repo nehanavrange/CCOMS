@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.cloudcomp.ccoms.emp.controller.ResourceNotFoundException;
 
 @ControllerAdvice
-public class MyControllerAdvice extends ResponseEntityExceptionHandler {
+public class EmpControllerAdvice extends ResponseEntityExceptionHandler {
 
 	//handles jvm response exception in understandable format
 	@Override

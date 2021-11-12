@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.cloudcomp.ccoms.dept.advice.ResourceNotFoundException;
 import com.cloudcomp.ccoms.dept.model.Department;
 import com.cloudcomp.ccoms.dept.service.DepartmentService;
 
@@ -72,7 +74,7 @@ public class DepartmentRestController {
 
     @ApiOperation(value = "Get department by departmet id")
     @GetMapping("/dept/{deptId}")
-    public Department getDeptById(@PathVariable("deptId") Long deptId) {
+    public Department getDeptById(@PathVariable("deptId") Long deptId) throws ResourceNotFoundException {
         return deptSvc.getDeptById(deptId);
     }
 
