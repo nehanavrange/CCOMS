@@ -40,26 +40,28 @@ public class EmployeeRestController {
 
 	@ApiOperation(value = "Get an employee by Id")
 	@GetMapping("/{id}")
-	public ResponseEntity<Employee> getEmpById(@PathVariable("id") Long id) throws ResourceNotFoundException 
-	{
+	public ResponseEntity<Employee> getEmpById(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		try {
 			return ResponseEntity.ok().body(empsvc.getEmpById(id));
 
-		} catch (ResourceNotFoundException e)
-		{
+		} catch (ResourceNotFoundException e) {
 			throw new ResourceNotFoundException("Id not found");
 		}
-		
 	}
 
 	@ApiOperation(value = "Add an employee")
 	@PostMapping("/addemp")
 	public ResponseEntity<Object> addEmp(@RequestBody Employee emp) {
-		empsvc.addEmp(emp);
-		// Create resource location
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/api/{id}").buildAndExpand(emp.getId())
-				.toUri();
-		return ResponseEntity.created(location).build();
+
+		try {
+			empsvc.addEmp(emp);
+			// Create resource location
+			URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/api/{id}")
+					.buildAndExpand(emp.getId()).toUri();
+			return  ResponseEntity.created(location).build();
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("Unable to save", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@ApiOperation(value = "Add an employees at once")
@@ -84,18 +86,15 @@ public class EmployeeRestController {
 		try {
 			empsvc.getEmpById(emp.getId());
 			empsvc.updateEmp(emp);
-			
+
 			return ResponseEntity.status(HttpStatus.OK).build();
 
 		} catch (ResourceNotFoundException e) {
-			//return ResponseEntity.notFound().build();
+			// return ResponseEntity.notFound().build();
 			throw new ResourceNotFoundException("Id not found");
-			
 		}
-
 		// can use 205 http reset
-		//return ResponseEntity.status(HttpStatus.OK).build();
-
+		// return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@ApiOperation(value = "Delete a employee by employee id")
@@ -104,8 +103,7 @@ public class EmployeeRestController {
 		try {
 			empsvc.deleteEmp(id);
 		} catch (ResourceNotFoundException e) {
-			//return ResponseEntity.notFound().build();
-			
+			// return ResponseEntity.notFound().build();
 			throw new ResourceNotFoundException("Id not found");
 		}
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -113,15 +111,15 @@ public class EmployeeRestController {
 
 	@ApiOperation(value = "Update a empoyee partially by employee id")
 	@PatchMapping("/{id}")
-	public ResponseEntity<Object> updateEmpPartially(@PathVariable("id") Long id, @RequestBody Employee emp) throws ResourceNotFoundException {
+	public ResponseEntity<Object> updateEmpPartially(@PathVariable("id") Long id, @RequestBody Employee emp)
+			throws ResourceNotFoundException {
 		try {
 			empsvc.updateEmpPartially(id);
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (ResourceNotFoundException e) {
-			//return ResponseEntity.notFound().build();
+			// return ResponseEntity.notFound().build();
 			throw new ResourceNotFoundException("Id not found");
 		}
-		
 	}
 
 	@ApiOperation(value = "List employee by department id")
